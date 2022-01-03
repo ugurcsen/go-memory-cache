@@ -11,14 +11,22 @@ func TestMemoryCache(t *testing.T) {
 	mcm.Set("c1", time.Second*10, func() interface{} {
 		return a
 	})
-	str, ok := mcm.Get("c1").(string)
+	v, err := mcm.Get("c1")
+	if err != nil {
+		t.Fatal("c1 not set")
+	}
+	str, ok := v.(string)
 	if !ok {
 		t.Fatal("Cache could not cast to string")
 	}
 	t.Log(str)
 	a ="str2"
 	mcm.RefreshAll()
-	str = mcm.Get("c1").(string)
+	v, err = mcm.Get("c1")
+	if err != nil {
+		t.Fatal("c1 not set")
+	}
+	str, ok = v.(string)
 	if !ok {
 		t.Fatal("Cache could not cast to string")
 	}
