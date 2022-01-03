@@ -1,10 +1,12 @@
 package MemoryCache
 
 import (
+	"sync"
 	"time"
 )
 
 type MemoryCache struct {
+	sync.RWMutex
 	data       interface{}
 	createDate time.Time
 	ttl        time.Duration
@@ -20,6 +22,8 @@ func NewMemoryCache(ttl time.Duration, dataCreator func() interface{}) *MemoryCa
 }
 
 func (mc *MemoryCache) Refresh()  {
+	mc.Lock()
+	defer mc.Unlock()
 	mc.createDate = time.Now()
 	mc.data = mc.dataCreator()
 }
