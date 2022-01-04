@@ -1,4 +1,4 @@
-package MemoryCache
+package main
 
 import (
 	"testing"
@@ -11,6 +11,7 @@ func TestMemoryCache(t *testing.T) {
 	mcm.Set("c1", time.Second*10, func() interface{} {
 		return a
 	})
+
 	v, err := mcm.Get("c1")
 	if err != nil {
 		t.Fatal("c1 not set")
@@ -22,14 +23,20 @@ func TestMemoryCache(t *testing.T) {
 	t.Log(str)
 	a ="str2"
 	mcm.RefreshAll()
-	v, err = mcm.Get("c1")
+	v2, err := mcm.Get("c1")
 	if err != nil {
 		t.Fatal("c1 not set")
 	}
-	str, ok = v.(string)
+	var str2 string
+	str2, ok = v2.(string)
 	if !ok {
 		t.Fatal("Cache could not cast to string")
 	}
-	t.Log(str)
+	t.Log(str2)
+
+	if str == str2 {
+		t.Fatal("Cache did not refresh")
+	}
 	mcm.Flush()
+	t.Log("flushed")
 }

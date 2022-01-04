@@ -1,4 +1,4 @@
-package MemoryCache
+package main
 
 import (
 	"errors"
